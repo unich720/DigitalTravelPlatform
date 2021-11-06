@@ -10,6 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DTP.Entity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
+using static DTP.Entity.ConnectingHelper;
 
 namespace DigitalTravelPlatform
 {
@@ -30,6 +34,14 @@ namespace DigitalTravelPlatform
                 option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddNewtonsoftJson(option =>
                 option.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+            var sqlConnBinder = new SqlConnString();
+            Configuration.GetSection("DigitalTravelPlatformDB").Bind(sqlConnBinder);
+
+            services.AddDbContext<DTPDBContext>(options =>
+            {
+                options.UseSqlServer(ConnectingHelper.BuildConnectionString(new SqlConnectionStringBuilder(), sqlConnBinder));
+            });
 
             services.AddControllers();
         }

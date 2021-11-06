@@ -11,24 +11,31 @@ namespace DigitalTravelPlatform.Controllers
 {
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[action]")]
     public class ClientController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<ClientController> _logger;
         private readonly DTPDBContext _contextDTP;
 
 
-        public ClientController(ILogger<WeatherForecastController> logger, DTPDBContext contextDTP)
+        public ClientController(ILogger<ClientController> logger, DTPDBContext contextDTP)
         {
             _logger = logger;
             _contextDTP = contextDTP;
         }
 
 
-        [HttpPost]
-        public JsonResult Get()
+        [HttpPost(Name = nameof(GetRofl))]
+        public async Task<JsonResult> GetRofl([FromBody] string param)
         {
-           
+            try
+            {
+                return default;
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError(ex, $"An error has occurred: {ex.Message}");
+            }
         }
 
 
