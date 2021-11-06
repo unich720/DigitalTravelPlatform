@@ -34,7 +34,6 @@ namespace DigitalTravelPlatform
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseContentRoot(System.IO.Directory.GetCurrentDirectory());
-                    webBuilder.UseKestrel(_ => _.AddServerHeader = false);
                     webBuilder.UseStartup<Startup>();
                 })
                 .ConfigureLogging(logging =>
