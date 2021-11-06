@@ -1,7 +1,5 @@
-﻿using System;
-using DTP.Entity.Models;
+﻿using DTP.Entity.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -41,15 +39,14 @@ namespace DTP.Entity
 
             modelBuilder.Entity<Answer>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.AnswerText).IsRequired();
 
-                entity.Property(e => e.AnswerText)
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
+                entity.Property(e => e.Count).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.Answers)
                     .HasForeignKey(d => d.QuestionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Answers_Questions");
             });
 
@@ -58,50 +55,48 @@ namespace DTP.Entity
                 entity.HasNoKey();
 
                 entity.ToTable("MovementHistory");
+
+                entity.HasOne(d => d.Place)
+                    .WithMany()
+                    .HasForeignKey(d => d.PlaceId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MovementHistory_Places");
+
+                entity.HasOne(d => d.User)
+                    .WithMany()
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MovementHistory_Users");
             });
 
             modelBuilder.Entity<Place>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Place1).HasColumnName("Place");
 
-                entity.Property(e => e.Place1)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("Place");
-
-                entity.Property(e => e.Rating).HasColumnType("decimal(5, 2)");
+                entity.Property(e => e.Rating)
+                    .HasColumnType("decimal(18, 2)")
+                    .HasDefaultValueSql("((0))");
             });
 
             modelBuilder.Entity<Poll>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.PollName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.PollName).IsRequired();
             });
 
             modelBuilder.Entity<Question>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.QuestionText)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.QuestionText).IsRequired();
 
                 entity.HasOne(d => d.Poll)
                     .WithMany(p => p.Questions)
                     .HasForeignKey(d => d.PollId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Questions_Polls");
             });
 
             modelBuilder.Entity<Route>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.RouteName)
-                    .HasMaxLength(10)
-                    .IsFixedLength(true);
+                entity.Property(e => e.RouteName).IsRequired();
             });
 
             modelBuilder.Entity<RoutePlace>(entity =>
@@ -121,25 +116,13 @@ namespace DTP.Entity
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.City)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.FirstName).IsRequired();
 
-                entity.Property(e => e.FirstName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.LastName).IsRequired();
 
-                entity.Property(e => e.LastName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Login).IsRequired();
 
-                entity.Property(e => e.Login)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Password)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Password).IsRequired();
             });
 
             OnModelCreatingPartial(modelBuilder);

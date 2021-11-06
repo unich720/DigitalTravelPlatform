@@ -1,10 +1,7 @@
-﻿using DTP.Entity;
-using Microsoft.AspNetCore.Http;
+﻿using DigitalTravelPlatform.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DigitalTravelPlatform.Controllers
@@ -15,37 +12,32 @@ namespace DigitalTravelPlatform.Controllers
     public class ClientController : ControllerBase
     {
         private readonly ILogger<ClientController> _logger;
-        private readonly DTPDBContext _contextDTP;
+        private readonly DTPProcessor _processor;
 
-
-        public ClientController(ILogger<ClientController> logger, DTPDBContext contextDTP)
+        public ClientController(ILogger<ClientController> logger, DTPProcessor processor)
         {
             _logger = logger;
-            _contextDTP = contextDTP;
+            _processor = processor;
         }
 
 
-        [HttpPost(Name = nameof(GetRofl))]
-        public async Task<JsonResult> GetRofl([FromBody] string param)
+        [HttpPost(Name = nameof(Login))]
+        public async Task<bool> Login([FromBody] ClientLogin clientLogin)
         {
             try
             {
-                return default;
+                var result = await _processor.Login(clientLogin.Login, clientLogin.Password);
+
+                _logger.LogInformation($"{clientLogin.Login} is login {result}");
+
+                return result;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _logger.LogError(ex, $"An error has occurred: {ex.Message}");
+                return false;
             }
         }
 
-
-
-
-
-
-
     }
-
-
-
 }

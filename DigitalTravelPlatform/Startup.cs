@@ -1,18 +1,12 @@
+using DTP.Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DTP.Entity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
 using static DTP.Entity.ConnectingHelper;
 
 namespace DigitalTravelPlatform
@@ -38,6 +32,7 @@ namespace DigitalTravelPlatform
             var sqlConnBinder = new SqlConnString();
             Configuration.GetSection("DigitalTravelPlatformDB").Bind(sqlConnBinder);
 
+            services.AddScoped<DTPProcessor>();
             services.AddDbContext<DTPDBContext>(options =>
             {
                 options.UseSqlServer(ConnectingHelper.BuildConnectionString(new SqlConnectionStringBuilder(), sqlConnBinder));
