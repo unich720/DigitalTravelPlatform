@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+
 namespace DTP.Entity.Models
 {
     public partial class RoutePlace

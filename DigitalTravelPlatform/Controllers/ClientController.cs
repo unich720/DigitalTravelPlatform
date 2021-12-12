@@ -40,5 +40,72 @@ namespace DigitalTravelPlatform.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost(Name = nameof(GetProfile))]
+        public async Task<Profile> GetProfile([FromBody] string login)
+        {
+            try
+            {
+                var result = await _processor.GetProfile(login);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error has occurred: {ex.Message}");
+                return default;
+            }
+        }
+
+        [Authorize]
+        [HttpPost(Name = nameof(ChangePassword))]
+        public async Task<bool> ChangePassword([FromBody] CPassword cPassword)
+        {
+            try
+            {
+                var result = await _processor.ChangePassword(cPassword.Login, cPassword.Password);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error has occurred: {ex.Message}");
+                return false;
+            }
+        }
+
+        [Authorize]
+        [HttpPost(Name = nameof(ChangeProfile))]
+        public async Task<bool> ChangeProfile([FromBody] Profile cProfile)
+        {
+            try
+            {
+                var result = await _processor.ChangeProfile(cProfile);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error has occurred: {ex.Message}");
+                return false;
+            }
+        }
+
+        [Authorize]
+        [HttpPost(Name = nameof(GivePointsUser))]
+        public async Task<bool> GivePointsUser([FromBody] UserPoints userPoints)
+        {
+            try
+            {
+                var result = await _processor.GivePointsUser(userPoints);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error has occurred: {ex.Message}");
+                return default;
+            }
+        }
     }
 }
