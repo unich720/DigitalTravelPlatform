@@ -1,4 +1,5 @@
 ﻿using DigitalTravelPlatform.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,7 +21,7 @@ namespace DigitalTravelPlatform.Controllers
             _processor = processor;
         }
 
-
+        [Authorize]
         [HttpPost(Name = nameof(Login))]
         public async Task<bool> Login([FromBody] ClientLogin clientLogin)
         {

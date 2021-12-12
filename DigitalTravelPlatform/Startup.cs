@@ -1,4 +1,6 @@
+using DigitalTravelPlatform.Auth;
 using DTP.Entity;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
@@ -38,6 +40,11 @@ namespace DigitalTravelPlatform
                 options.UseSqlServer(ConnectingHelper.BuildConnectionString(new SqlConnectionStringBuilder(), sqlConnBinder));
             });
 
+            services.Configure<BasicAuthSettings>(Configuration.GetSection("BasicAuth"));
+            services.AddAuthentication("BasicAuthentication").
+                AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>
+                ("BasicAuthentication", null);
+
             services.AddControllers();
         }
 
@@ -51,6 +58,7 @@ namespace DigitalTravelPlatform
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
