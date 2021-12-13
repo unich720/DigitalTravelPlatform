@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DigitalTravelPlatform.Controllers
@@ -38,12 +39,12 @@ namespace DigitalTravelPlatform.Controllers
         }
 
         [Authorize]
-        [HttpPost(Name = nameof(GetQuestion))]
-        public async Task<Question> GetAnswer([FromBody] short pollId)
+        [HttpPost(Name = nameof(GetAnswer))]
+        public async Task<List<Answer>> GetAnswer([FromBody] short pollId)
         {
             try
             {
-                var result = await _processor.GetQuestion(pollId);
+                var result = await _processor.GetAnswer(pollId);
 
                 return result;
             }
